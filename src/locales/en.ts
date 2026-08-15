@@ -1,0 +1,93 @@
+export const en = {
+  localeName: "English",
+  nav: {
+    badge: "Release marketing autopilot",
+    pricing: "Founder plan",
+  },
+  hero: {
+    eyebrow: "From shipped to shared",
+    title: "Ship the feature.",
+    titleAccent: "We’ll make the announcement.",
+    description:
+      "Turn a rough browser recording into a polished release video and launch-ready social copy—in one focused flow.",
+    trust: "Built for founder-led SaaS and DevTool teams",
+  },
+  form: {
+    title: "Create a Feature Release",
+    subtitle: "Upload what you shipped. ReleaseFlow handles the announcement.",
+    recordingLabel: "Browser screen recording",
+    recordingHint: "MP4 or MOV · up to 500 MB · up to 90 seconds",
+    recordingEmpty: "Drop your recording here or choose a file",
+    recordingSelected: "Recording selected",
+    replace: "Replace",
+    featureNameLabel: "Feature name",
+    featureNamePlaceholder: "AI Search",
+    descriptionLabel: "What did you ship?",
+    descriptionPlaceholder:
+      "Users can now search across projects, tasks, and documents using natural language.",
+    productUrlLabel: "Product URL",
+    optional: "Optional",
+    productUrlPlaceholder: "https://flowbase.ai",
+    generate: "Generate Release Pack",
+    generating: "Generating…",
+    outputLanguage: "Generated posts: English",
+    privacy: "Your recording stays in your local ReleaseFlow data directory.",
+  },
+  processing: {
+    title: "Finishing your announcement",
+    subtitle: "You can keep this tab open while ReleaseFlow prepares the pack.",
+    awaitingUpload: "Waiting for recording",
+    uploading: "Uploading recording",
+    validating: "Preparing video",
+    rendering: "Building release video",
+    writingCopy: "Writing launch copy",
+    finalizing: "Finalizing",
+    completed: "Release Pack ready",
+    failed: "Generation stopped",
+  },
+  result: {
+    ready: "Release Pack ready",
+    done: "Your announcement is finished.",
+    videoKind: "Video",
+    video: "Feature release video",
+    readyBadge: "Ready",
+    download: "Download MP4",
+    xPost: "X post",
+    linkedinPost: "LinkedIn post",
+    copy: "Copy",
+    copied: "Copied",
+    regenerate: "Regenerate",
+    regenerateLater: "Regeneration controls are planned for the next milestone.",
+    newRelease: "Create another release",
+    previewLabel: "Generated release video preview",
+  },
+  errors: {
+    requiredFields: "Add a recording, feature name, and description to continue.",
+    invalidUrl: "Enter a valid http:// or https:// product URL.",
+    uploadFailed: "The recording could not be uploaded. Please try again.",
+    network: "ReleaseFlow lost the connection. Please try again.",
+    unsupported_format: "Use a valid MP4 or MOV browser recording.",
+    file_too_large: "This recording is larger than the 500 MB limit.",
+    video_too_long: "This recording is longer than the 90 second limit.",
+    invalid_resolution: "The recording resolution is not supported.",
+    corrupt_media: "The recording could not be read. Try exporting it again.",
+    ffmpeg_unavailable: "FFmpeg is not available on the server.",
+    ffmpeg_failed: "Video processing failed. Try another recording.",
+    rendering_failed: "The release video could not be rendered.",
+    download_missing: "The generated video is no longer available.",
+    release_not_found: "This release could not be found.",
+    invalid_request: "Some release details were invalid.",
+    internal_error: "Something went wrong while building the release pack.",
+  },
+  misc: {
+    language: "Language",
+    step: "Step",
+    of: "of",
+  },
+} as const;
+
+type WidenStrings<T> = T extends string
+  ? string
+  : { readonly [K in keyof T]: WidenStrings<T[K]> };
+
+export type Messages = WidenStrings<typeof en>;

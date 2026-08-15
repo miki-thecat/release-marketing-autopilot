@@ -1,0 +1,12 @@
+node_modules/
+.npm-cache/
+.next/
+out/
+data/releases/
+coverage/
+*.log
+*.tsbuildinfo
+.manual-test/
+.env
+.env.local
+!.env.example
