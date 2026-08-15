@@ -2,7 +2,12 @@
 
 import { type ChangeEvent, type DragEvent, type FormEvent, useRef, useState } from "react";
 import { track } from "@/lib/analytics/track";
-import type { ReleaseErrorCode, ReleaseRecord, ReleaseStage } from "@/lib/release/types";
+import type {
+  RegenerationIntent,
+  ReleaseErrorCode,
+  ReleaseRecord,
+  ReleaseStage,
+} from "@/lib/release/types";
 import { limits } from "@/lib/config";
 import { DEFAULT_LOCALE, locales, type Locale } from "@/locales";
 
@@ -12,8 +17,9 @@ type SocialTab = "x" | "linkedin";
 const PROCESSING_STAGES = [
   "uploading",
   "validating",
+  "analyzing",
+  "planning",
   "rendering",
-  "writing_copy",
   "finalizing",
 ] as const satisfies readonly ReleaseStage[];
 type ProcessingStage = (typeof PROCESSING_STAGES)[number];
@@ -30,7 +36,9 @@ export function ReleaseFlowApp() {
   const [isDragging, setIsDragging] = useState(false);
   const [socialTab, setSocialTab] = useState<SocialTab>("x");
   const [copied, setCopied] = useState<SocialTab>();
-  const [regenerateNotice, setRegenerateNotice] = useState(false);
+  const [showRegenerate, setShowRegenerate] = useState(false);
+  const [regenerateIntent, setRegenerateIntent] = useState<RegenerationIntent>("shorter");
+  const [customInstruction, setCustomInstruction] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const t = locales[locale];
 
@@ -119,8 +127,43 @@ export function ReleaseFlowApp() {
     setProductUrl("");
     setRelease(undefined);
     setErrorCode(undefined);
-    setRegenerateNotice(false);
+    setShowRegenerate(false);
+    setRegenerateIntent("shorter");
+    setCustomInstruction("");
     if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function regenerate() {
+    if (!release) return;
+    if (regenerateIntent === "custom" && !customInstruction.trim()) {
+      setErrorCode("invalid_request");
+      return;
+    }
+    setErrorCode(undefined);
+    setShowRegenerate(false);
+    setView("processing");
+    track("regenerate_submitted", { releaseId: release.id, intent: regenerateIntent });
+    try {
+      const response = await fetch(`/api/releases/${release.id}/regenerate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          intent: regenerateIntent,
+          ...(regenerateIntent === "custom"
+            ? { customInstruction: customInstruction.trim() }
+            : {}),
+        }),
+      });
+      await parseApiResponse(response);
+      await pollUntilComplete(release.id, setRelease);
+      const finalResponse = await fetch(`/api/releases/${release.id}`, { cache: "no-store" });
+      const finalPayload = await parseApiResponse(finalResponse);
+      setRelease(finalPayload.release);
+      setView("result");
+    } catch (error) {
+      setErrorCode(error instanceof ApiError ? error.code : "internal_error");
+      setView("result");
+    }
   }
 
   const displayedError = errorCode
@@ -249,7 +292,7 @@ export function ReleaseFlowApp() {
               </div>
               <a
                 className="download-button"
-                href={`${release.videoUrl}?download=1`}
+                href={withDownload(release.videoUrl)}
                 onClick={() => track("video_downloaded", { releaseId: release.id })}
               ><DownloadIcon />{t.result.download}</a>
             </article>
@@ -264,10 +307,47 @@ export function ReleaseFlowApp() {
             </article>
           </div>
           <div className="result-actions">
-            <button type="button" className="secondary-button" onClick={() => { setRegenerateNotice(true); track("regenerate_clicked", { releaseId: release.id }); }}><RefreshIcon />{t.result.regenerate}</button>
+            <button type="button" className="secondary-button" onClick={() => { setShowRegenerate((value) => !value); setErrorCode(undefined); track("regenerate_clicked", { releaseId: release.id }); }}><RefreshIcon />{t.result.regenerate}</button>
             <button type="button" className="text-action" onClick={reset}>{t.result.newRelease}<ArrowIcon /></button>
           </div>
-          {regenerateNotice && <p className="regenerate-note">{t.result.regenerateLater}</p>}
+          {showRegenerate && (
+            <div className="regenerate-panel">
+              <div className="regenerate-heading"><h2>{t.result.regenerateTitle}</h2><p>{t.result.regenerateSubtitle}</p></div>
+              {errorCode && <div className="error-banner" role="alert"><AlertIcon />{t.errors[errorCode]}</div>}
+              <div className="intent-grid">
+                {([
+                  ["shorter", t.result.shorter],
+                  ["energetic", t.result.energetic],
+                  ["focus_results", t.result.focusResults],
+                  ["less_text", t.result.lessText],
+                  ["professional", t.result.professional],
+                  ["custom", t.result.custom],
+                ] as const).map(([intent, label]) => (
+                  <button
+                    type="button"
+                    key={intent}
+                    className={regenerateIntent === intent ? "active" : ""}
+                    aria-pressed={regenerateIntent === intent}
+                    onClick={() => setRegenerateIntent(intent)}
+                  >{label}</button>
+                ))}
+              </div>
+              {regenerateIntent === "custom" && (
+                <textarea
+                  value={customInstruction}
+                  onChange={(event) => setCustomInstruction(event.target.value)}
+                  maxLength={limits.maxRegenerationInstructionLength}
+                  rows={3}
+                  placeholder={t.result.customPlaceholder}
+                  aria-label={t.result.custom}
+                />
+              )}
+              <div className="regenerate-buttons">
+                <button type="button" className="secondary-button" onClick={() => setShowRegenerate(false)}>{t.result.cancel}</button>
+                <button type="button" className="primary-button compact" onClick={regenerate}><RefreshIcon />{t.result.applyRegenerate}</button>
+              </div>
+            </div>
+          )}
         </section>
       )}
     </main>
@@ -282,8 +362,9 @@ function ProcessingView({ release, t }: { release?: ReleaseRecord; t: (typeof lo
   const stageLabels: Record<ProcessingStage, string> = {
     uploading: t.processing.uploading,
     validating: t.processing.validating,
+    analyzing: t.processing.analyzing,
+    planning: t.processing.planning,
     rendering: t.processing.rendering,
-    writing_copy: t.processing.writingCopy,
     finalizing: t.processing.finalizing,
   };
   return (
@@ -343,6 +424,10 @@ function isHttpUrl(value: string): boolean {
 
 function formatBytes(bytes: number): string {
   return bytes < 1024 * 1024 ? `${Math.ceil(bytes / 1024)} KB` : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function withDownload(videoUrl: string): string {
+  return `${videoUrl}${videoUrl.includes("?") ? "&" : "?"}download=1`;
 }
 
 function SparkIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.35 5.65L19 9l-5.65 1.35L12 16l-1.35-5.65L5 9l5.65-1.35L12 2zM19 15l.7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7L19 15z" /></svg>; }

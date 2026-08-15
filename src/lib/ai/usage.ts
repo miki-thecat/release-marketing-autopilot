@@ -1,12 +1,14 @@
 export interface AIUsage {
   releaseId: string;
   provider: string;
-  operation: string;
+  model?: string;
+  operation: "plan_release" | "regenerate_release";
   inputTokens?: number;
   outputTokens?: number;
   frameCount: number;
-  approximateCostUsd: number;
+  approximateCostUsd?: number;
   durationMs: number;
+  regenerationCount: number;
 }
 
 export function logAIUsage(usage: AIUsage): void {

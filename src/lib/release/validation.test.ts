@@ -41,29 +41,70 @@ describe("release validation", () => {
 });
 
 describe("storyboard guardrails", () => {
-  it("clamps untrusted model values to renderer-safe ranges", () => {
-    const result = validateStoryboard({
-      targetDuration: 200,
+  it("clamps timestamps, zoom, focus, scene count, text, and total duration", () => {
+    const result = validateStoryboard(storyboard({
+      targetDurationSeconds: 200,
       hook: "h".repeat(200),
-      cta: "Available now",
-      segments: [{
-        start: -12,
-        end: 400,
+      segments: Array.from({ length: 8 }, (_, index) => ({
+        sourceStart: index === 0 ? -12 : index * 5,
+        sourceEnd: index === 0 ? 400 : index * 5 + 10,
         purpose: "result",
+        caption: "caption",
         focusX: 4,
         focusY: -3,
         zoom: 9,
-      }],
-    }, 60);
+      })),
+    }), 60);
 
-    expect(result.targetDuration).toBe(30);
+    expect(result.targetDurationSeconds).toBe(30);
     expect(result.hook).toHaveLength(80);
+    expect(result.segments.length).toBeLessThanOrEqual(4);
     expect(result.segments[0]).toMatchObject({
-      start: 0,
-      end: 60,
+      sourceStart: 0,
+      sourceEnd: 25,
       focusX: 1,
       focusY: 0,
-      zoom: 1.5,
+      zoom: 1.3,
     });
+    expect(totalDuration(result.segments)).toBeLessThanOrEqual(25);
+  });
+
+  it("repairs reversed ranges and drops unusably short ranges", () => {
+    const result = validateStoryboard(storyboard({
+      segments: [
+        { sourceStart: 8, sourceEnd: 3, purpose: "result", caption: null, focusX: null, focusY: null, zoom: null },
+        { sourceStart: 9.9, sourceEnd: 10, purpose: "dead", caption: null, focusX: null, focusY: null, zoom: null },
+      ],
+    }), 10);
+    expect(result.segments).toHaveLength(1);
+    expect(result.segments[0]).toMatchObject({ sourceStart: 3, sourceEnd: 8 });
+  });
+
+  it("rejects a structurally invalid model response", () => {
+    expect(() => validateStoryboard({ hook: "Missing fields" }, 10)).toThrow("structure");
   });
 });
+
+function storyboard(overrides: Record<string, unknown> = {}) {
+  return {
+    targetDurationSeconds: 20,
+    hook: "Meet AI Search.",
+    cta: "Available now.",
+    segments: [{
+      sourceStart: 0,
+      sourceEnd: 5,
+      purpose: "Show result",
+      caption: null,
+      focusX: null,
+      focusY: null,
+      zoom: null,
+    }],
+    xPost: "We shipped AI Search.",
+    linkedinPost: "We shipped AI Search for faster project discovery.",
+    ...overrides,
+  };
+}
+
+function totalDuration(segments: Array<{ sourceStart: number; sourceEnd: number }>): number {
+  return segments.reduce((sum, segment) => sum + segment.sourceEnd - segment.sourceStart, 0);
+}

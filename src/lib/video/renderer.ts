@@ -1,11 +1,11 @@
-import type { ReleaseCopy, ReleaseDetails, VideoMetadata } from "@/lib/release/types";
+import type { ReleaseDetails, ReleaseStoryboard, VideoMetadata } from "@/lib/release/types";
 
 export interface RenderRequest {
   frameType: "browser";
   inputPath: string;
   outputPath: string;
   details: ReleaseDetails;
-  copy: ReleaseCopy;
+  storyboard: ReleaseStoryboard;
   metadata: VideoMetadata;
 }
 

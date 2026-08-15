@@ -6,6 +6,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { ReleaseRecord } from "@/lib/release/types";
 import { LocalStorageProvider } from "@/lib/storage/local-storage";
 import { FFmpegVideoRenderer } from "@/lib/video/ffmpeg-renderer";
+import { FFmpegFrameExtractor } from "@/lib/video/frame-extractor";
+import { DeterministicLLMProvider } from "@/lib/ai/deterministic-provider";
 import { runProcess } from "@/lib/video/process";
 import { probeVideo } from "@/lib/video/probe";
 import { VideoJobRunner } from "./video-job-runner";
@@ -46,12 +48,19 @@ describe("real release pipeline", () => {
     const bytes = await storage.saveInput(id, createReadStream(source));
     expect(bytes).toBeGreaterThan(1_000);
 
-    const runner = new VideoJobRunner(storage, new FFmpegVideoRenderer());
+    const runner = new VideoJobRunner(
+      storage,
+      new FFmpegVideoRenderer(),
+      new FFmpegFrameExtractor(),
+      () => new DeterministicLLMProvider(),
+    );
     await runner.run(id);
 
     const completed = await storage.read(id);
     expect(completed.stage).toBe("completed");
     expect(completed.copy?.xPost).toContain("AI Search");
+    expect(completed.storyboard?.segments.length).toBeGreaterThan(0);
+    expect(completed.planning).toMatchObject({ provider: "deterministic", fallbackUsed: true });
     expect(await storage.outputExists(id)).toBe(true);
     const outputMetadata = await probeVideo(storage.getOutputPath(id));
     expect(outputMetadata).toMatchObject({ width: 1920, height: 1080, codec: "h264" });

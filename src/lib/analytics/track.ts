@@ -5,6 +5,8 @@ export type AnalyticsEvent =
   | "feature_details_completed"
   | "generation_started"
   | "generation_completed"
+  | "regenerate_submitted"
+  | "regeneration_completed"
   | "video_previewed"
   | "video_downloaded"
   | "x_copy_copied"

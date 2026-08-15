@@ -10,6 +10,7 @@ export const limits = Object.freeze({
   maxFeatureNameLength: 80,
   maxDescriptionLength: 600,
   maxProductUrlLength: 300,
+  maxRegenerationInstructionLength: 300,
 });
 
 export const renderConfig = Object.freeze({
@@ -17,8 +18,22 @@ export const renderConfig = Object.freeze({
   height: 1080,
   fps: 30,
   introSeconds: 2,
-  maxRecordingSeconds: 15,
+  maxSourceSeconds: 25,
   outroSeconds: 3,
+  minTargetSeconds: 15,
+  maxTargetSeconds: 30,
+  maxSegments: 4,
+  maxZoom: 1.3,
+});
+
+export const frameExtractionConfig = Object.freeze({
+  minimumTypicalFrames: 8,
+  targetFrames: 12,
+  maximumFrames: 20,
+  width: 800,
+  jpegQuality: 5,
+  sceneThreshold: 0.28,
+  cacheVersion: 1,
 });
 
 export const runtimeConfig = Object.freeze({
@@ -26,6 +41,7 @@ export const runtimeConfig = Object.freeze({
     process.env.RELEASEFLOW_DATA_DIR || path.join(process.cwd(), "data", "releases"),
   ffmpegPath: process.env.FFMPEG_PATH || "ffmpeg",
   ffprobePath: process.env.FFPROBE_PATH || "ffprobe",
+  openAIModel: process.env.OPENAI_MODEL || "gpt-5.4-mini",
 });
 
 export const acceptedUploadMimeTypes = new Set([

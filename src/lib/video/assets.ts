@@ -1,30 +1,34 @@
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
-import type { ReleaseCopy, ReleaseDetails } from "@/lib/release/types";
+import type { ReleaseDetails, ReleaseStoryboard } from "@/lib/release/types";
 
 export interface RenderAssets {
   intro: string;
   browser: string;
   outro: string;
+  captions: string[];
 }
 
 export async function createRenderAssets(
   directory: string,
   details: ReleaseDetails,
-  copy: ReleaseCopy,
+  storyboard: ReleaseStoryboard,
 ): Promise<RenderAssets> {
   const intro = path.join(directory, "intro.png");
   const browser = path.join(directory, "browser.png");
   const outro = path.join(directory, "outro.png");
+  const captions = storyboard.segments.map((_, index) => path.join(directory, `caption-${index}.png`));
 
   await Promise.all([
-    svgToPng(introSvg(copy.hook, details.featureName), intro),
+    svgToPng(introSvg(storyboard.hook, details.featureName), intro),
     svgToPng(browserSvg(details), browser),
-    svgToPng(outroSvg(copy.cta, details.productUrl), outro),
+    svgToPng(outroSvg(storyboard.cta, details.productUrl), outro),
+    ...captions.map((destination, index) =>
+      svgToPng(captionSvg(storyboard.segments[index].caption), destination)),
   ]);
 
-  return { intro, browser, outro };
+  return { intro, browser, outro, captions };
 }
 
 async function svgToPng(svg: string, destination: string): Promise<void> {
@@ -77,6 +81,19 @@ function outroSvg(cta: string, productUrl?: string): string {
     <rect x="760" y="790" width="400" height="74" rx="20" fill="#14231f" />
     <text x="960" y="838" text-anchor="middle" class="button">${xml(host)}</text>
   `);
+}
+
+function captionSvg(caption?: string): string {
+  const clean = caption?.trim();
+  if (!clean) return `<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg"/>`;
+  const lines = wrap(clean, 48, 2);
+  const height = lines.length > 1 ? 116 : 82;
+  const y = 950 - height;
+  return `<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+    <defs><filter id="captionShadow" x="-20%" y="-50%" width="140%" height="220%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity=".22"/></filter></defs>
+    <rect x="490" y="${y}" width="940" height="${height}" rx="22" fill="#14231f" fill-opacity=".92" filter="url(#captionShadow)"/>
+    <text x="960" y="${y + 51}" text-anchor="middle" font-family="Inter, Segoe UI, Noto Sans, Arial, sans-serif" font-size="27" font-weight="650" fill="#ffffff">${tspans(lines, 960, 0, 36)}</text>
+  </svg>`;
 }
 
 function baseSvg(content: string): string {

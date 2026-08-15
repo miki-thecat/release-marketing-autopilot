@@ -2,8 +2,9 @@ export type ReleaseStage =
   | "awaiting_upload"
   | "uploading"
   | "validating"
+  | "analyzing"
+  | "planning"
   | "rendering"
-  | "writing_copy"
   | "finalizing"
   | "completed"
   | "failed";
@@ -22,6 +23,19 @@ export type ReleaseErrorCode =
   | "invalid_request"
   | "internal_error";
 
+export type RegenerationIntent =
+  | "shorter"
+  | "energetic"
+  | "focus_results"
+  | "less_text"
+  | "professional"
+  | "custom";
+
+export interface RegenerationRequest {
+  intent: RegenerationIntent;
+  customInstruction?: string;
+}
+
 export interface ReleaseDetails {
   featureName: string;
   description: string;
@@ -34,6 +48,7 @@ export interface ReleaseCopy {
   xPost: string;
   linkedinPost: string;
   provider: string;
+  model?: string;
 }
 
 export interface VideoMetadata {
@@ -42,6 +57,32 @@ export interface VideoMetadata {
   height: number;
   codec: string;
   format: string;
+}
+
+export interface StoryboardSegment {
+  sourceStart: number;
+  sourceEnd: number;
+  purpose: string;
+  caption?: string;
+  focusX: number;
+  focusY: number;
+  zoom: number;
+}
+
+export interface ReleaseStoryboard {
+  targetDurationSeconds: number;
+  hook: string;
+  cta: string;
+  segments: StoryboardSegment[];
+  xPost: string;
+  linkedinPost: string;
+}
+
+export interface ReleasePlanningSummary {
+  provider: string;
+  model?: string;
+  frameCount: number;
+  fallbackUsed: boolean;
 }
 
 export interface ReleaseRecord {
@@ -54,23 +95,11 @@ export interface ReleaseRecord {
   originalFileName?: string;
   inputBytes?: number;
   metadata?: VideoMetadata;
+  storyboard?: ReleaseStoryboard;
+  planning?: ReleasePlanningSummary;
   copy?: ReleaseCopy;
+  regenerationCount?: number;
+  videoRevision?: number;
   videoUrl?: string;
   errorCode?: ReleaseErrorCode;
-}
-
-export interface StoryboardSegment {
-  start: number;
-  end: number;
-  purpose: string;
-  focusX: number;
-  focusY: number;
-  zoom: number;
-}
-
-export interface Storyboard {
-  targetDuration: number;
-  hook: string;
-  cta: string;
-  segments: StoryboardSegment[];
 }

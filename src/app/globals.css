@@ -93,7 +93,7 @@ svg { width: 1.2em; height: 1.2em; fill: none; stroke: currentColor; stroke-widt
 .progress-top span { color: var(--green-dark); font-weight: 750; }
 .progress-track { height: 7px; border-radius: 99px; overflow: hidden; background: #e8eeeb; margin: 13px 0 25px; }
 .progress-track span { height: 100%; display: block; background: linear-gradient(90deg, var(--green-dark), #3ac995); border-radius: inherit; transition: width .7s ease; }
-.stage-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.stage-list { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
 .stage-item { color: #a1aaa7; text-align: center; font-size: 9px; display: flex; flex-direction: column; align-items: center; gap: 7px; }
 .stage-dot { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; border: 1px solid #d6dfdb; font-size: 9px; background: #fff; }
 .stage-dot svg { width: 12px; }
@@ -132,7 +132,16 @@ svg { width: 1.2em; height: 1.2em; fill: none; stroke: currentColor; stroke-widt
 .secondary-button { min-height: 39px; padding: 0 16px; background: #fff; border: 1px solid var(--line); border-radius: 9px; }
 .text-action { border: 0; background: transparent; color: var(--green-dark); }
 .secondary-button svg, .text-action svg { width: 14px; }
-.regenerate-note { text-align: center; color: var(--muted); font-size: 10px; margin: 12px 0 0; }
+.regenerate-panel { width: min(100%, 720px); margin: 24px auto 0; padding: 22px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.95); box-shadow: 0 16px 45px rgba(31,53,45,.08); }
+.regenerate-heading h2 { margin: 0; font-size: 16px; }
+.regenerate-heading p { margin: 6px 0 18px; color: var(--muted); font-size: 11px; }
+.intent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.intent-grid button { min-height: 40px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--muted); cursor: pointer; font-size: 10px; font-weight: 680; }
+.intent-grid button.active { border-color: var(--green); background: var(--green-soft); color: var(--green-dark); }
+.regenerate-panel textarea { width: 100%; margin-top: 12px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; resize: vertical; font: inherit; }
+.regenerate-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+.primary-button.compact { width: auto; min-height: 39px; margin: 0; padding: 0 17px; border: 0; }
+.primary-button.compact svg { width: 14px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes breathe { 50% { transform: scale(1.04); } }
 @media (max-width: 960px) {
@@ -158,6 +167,7 @@ svg { width: 1.2em; height: 1.2em; fill: none; stroke: currentColor; stroke-widt
   .result-section { padding-top: 46px; }
   .video-card, .social-card { padding: 15px; }
   .result-heading h1, .processing-section h1 { font-size: 30px; }
+  .intent-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

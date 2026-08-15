@@ -68,6 +68,10 @@ export class LocalStorageProvider implements StorageProvider {
     return containedPath(this.releaseDirectory(id), "output.mp4");
   }
 
+  getFramesDirectory(id: string): string {
+    return containedPath(this.releaseDirectory(id), "frames");
+  }
+
   async outputExists(id: string): Promise<boolean> {
     try {
       await access(this.getOutputPath(id));

@@ -1,11 +1,39 @@
-import { limits } from "@/lib/config";
+import { z } from "zod";
+import { limits, renderConfig } from "@/lib/config";
 import { ReleaseError } from "./errors";
 import type {
+  RegenerationRequest,
   ReleaseDetails,
-  Storyboard,
+  ReleaseStoryboard,
   StoryboardSegment,
   VideoMetadata,
 } from "./types";
+
+export const openAIReleaseStoryboardSchema = z.object({
+  targetDurationSeconds: z.number(),
+  hook: z.string(),
+  cta: z.string(),
+  segments: z.array(z.object({
+    sourceStart: z.number(),
+    sourceEnd: z.number(),
+    purpose: z.string(),
+    caption: z.string().nullable(),
+    focusX: z.number().nullable(),
+    focusY: z.number().nullable(),
+    zoom: z.number().nullable(),
+  })),
+  xPost: z.string(),
+  linkedinPost: z.string(),
+});
+
+const regenerationIntents = new Set([
+  "shorter",
+  "energetic",
+  "focus_results",
+  "less_text",
+  "professional",
+  "custom",
+]);
 
 export function validateReleaseDetails(input: unknown): ReleaseDetails {
   if (!input || typeof input !== "object") {
@@ -34,6 +62,28 @@ export function validateReleaseDetails(input: unknown): ReleaseDetails {
   }
 
   return { featureName, description, ...(productUrl ? { productUrl } : {}) };
+}
+
+export function validateRegenerationRequest(input: unknown): RegenerationRequest {
+  if (!input || typeof input !== "object") {
+    throw new ReleaseError("invalid_request", "Regeneration request must be an object");
+  }
+  const candidate = input as Record<string, unknown>;
+  if (typeof candidate.intent !== "string" || !regenerationIntents.has(candidate.intent)) {
+    throw new ReleaseError("invalid_request", "Regeneration intent is invalid");
+  }
+  const customInstruction = cleanText(
+    candidate.customInstruction,
+    limits.maxRegenerationInstructionLength,
+    true,
+  );
+  if (candidate.intent === "custom" && !customInstruction) {
+    throw new ReleaseError("invalid_request", "Custom instruction is required");
+  }
+  return {
+    intent: candidate.intent as RegenerationRequest["intent"],
+    ...(customInstruction ? { customInstruction } : {}),
+  };
 }
 
 function cleanText(value: unknown, maxLength: number, optional = false): string {
@@ -70,38 +120,95 @@ export function validateVideoMetadata(metadata: VideoMetadata): VideoMetadata {
   return metadata;
 }
 
-export function validateStoryboard(input: Storyboard, sourceDuration: number): Storyboard {
-  const duration = clamp(finite(input.targetDuration, 20), 5, 30);
-  const segments = (Array.isArray(input.segments) ? input.segments : [])
-    .slice(0, 12)
-    .map((segment) => validateSegment(segment, sourceDuration))
-    .filter((segment) => segment.end - segment.start >= 0.25);
+export function validateStoryboard(input: unknown, sourceDuration: number): ReleaseStoryboard {
+  const parsed = openAIReleaseStoryboardSchema.safeParse(input);
+  if (!parsed.success) {
+    throw new ReleaseError("invalid_request", "AI storyboard has an invalid structure");
+  }
+  if (!Number.isFinite(sourceDuration) || sourceDuration <= 0) {
+    throw new ReleaseError("corrupt_media", "Source duration is invalid");
+  }
+
+  const candidate = parsed.data;
+  const targetDurationSeconds = clamp(
+    finite(candidate.targetDurationSeconds, 20),
+    renderConfig.minTargetSeconds,
+    renderConfig.maxTargetSeconds,
+  );
+  const sourceBudget = Math.min(
+    renderConfig.maxSourceSeconds,
+    Math.max(1, targetDurationSeconds - renderConfig.introSeconds - renderConfig.outroSeconds),
+  );
+  const minimumSegmentDuration = Math.min(1, sourceDuration);
+  const segments: StoryboardSegment[] = [];
+  let selectedDuration = 0;
+
+  for (const rawSegment of candidate.segments.slice(0, renderConfig.maxSegments)) {
+    let start = clamp(finite(rawSegment.sourceStart, 0), 0, sourceDuration);
+    let end = clamp(finite(rawSegment.sourceEnd, start), 0, sourceDuration);
+    if (end < start) [start, end] = [end, start];
+
+    const remaining = sourceBudget - selectedDuration;
+    if (remaining < minimumSegmentDuration) break;
+    end = Math.min(end, start + remaining);
+    if (end - start < minimumSegmentDuration) continue;
+
+    segments.push({
+      sourceStart: roundTime(start),
+      sourceEnd: roundTime(end),
+      purpose: boundedText(rawSegment.purpose, "Feature demonstration", 120),
+      ...(rawSegment.caption ? { caption: boundedText(rawSegment.caption, "", 90) } : {}),
+      focusX: clamp(finite(rawSegment.focusX, 0.5), 0, 1),
+      focusY: clamp(finite(rawSegment.focusY, 0.5), 0, 1),
+      zoom: clamp(finite(rawSegment.zoom, 1), 1, renderConfig.maxZoom),
+    });
+    selectedDuration += end - start;
+  }
+
+  if (segments.length === 0) {
+    segments.push({
+      sourceStart: 0,
+      sourceEnd: roundTime(Math.min(sourceDuration, sourceBudget)),
+      purpose: "Feature demonstration",
+      focusX: 0.5,
+      focusY: 0.5,
+      zoom: 1,
+    });
+  }
 
   return {
-    targetDuration: duration,
-    hook: String(input.hook || "New feature").trim().slice(0, 80),
-    cta: String(input.cta || "Available now").trim().slice(0, 80),
+    targetDurationSeconds,
+    hook: boundedText(candidate.hook, "See what’s new.", 80),
+    cta: boundedText(candidate.cta, "Available now.", 80),
     segments,
+    xPost: boundedCopy(candidate.xPost, "A new feature is available now.", 280),
+    linkedinPost: boundedCopy(candidate.linkedinPost, "A new feature is available now.", 1_200),
   };
 }
 
-function validateSegment(segment: StoryboardSegment, sourceDuration: number): StoryboardSegment {
-  const start = clamp(finite(segment.start, 0), 0, sourceDuration);
-  const end = clamp(finite(segment.end, start), start, sourceDuration);
-  return {
-    start,
-    end,
-    purpose: String(segment.purpose || "feature demonstration").slice(0, 120),
-    focusX: clamp(finite(segment.focusX, 0.5), 0, 1),
-    focusY: clamp(finite(segment.focusY, 0.5), 0, 1),
-    zoom: clamp(finite(segment.zoom, 1), 1, 1.5),
-  };
+function boundedText(value: string, fallback: string, maxLength: number): string {
+  const cleaned = value.replace(/[\u0000-\u001F\u007F]/g, " ").replace(/\s+/g, " ").trim();
+  return (cleaned || fallback).slice(0, maxLength);
 }
 
-function finite(value: number, fallback: number): number {
-  return Number.isFinite(value) ? value : fallback;
+function boundedCopy(value: string, fallback: string, maxLength: number): string {
+  const cleaned = value
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\u0000-\u0009\u000B-\u001F\u007F]/g, " ")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+  return (cleaned || fallback).slice(0, maxLength);
+}
+
+function finite(value: number | null, fallback: number): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
+}
+
+function roundTime(value: number): number {
+  return Math.round(value * 1_000) / 1_000;
 }

@@ -7,5 +7,6 @@ export interface StorageProvider {
   saveInput(id: string, source: AsyncIterable<Uint8Array>): Promise<number>;
   getInputPath(id: string): string;
   getOutputPath(id: string): string;
+  getFramesDirectory(id: string): string;
   outputExists(id: string): Promise<boolean>;
 }
