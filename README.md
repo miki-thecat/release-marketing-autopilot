@@ -19,7 +19,7 @@ This repository is the Local Core MVP: a local Next.js application with server-s
 
 ## Requirements
 
-- Node.js 20 or newer (Node.js 22 is used by the Docker image)
+- Node.js 22 or newer
 - npm
 - FFmpeg and FFprobe available on `PATH`
 
@@ -114,6 +114,10 @@ npm run build
 ```
 
 Tests do not require a real API key. They cover storyboard guardrails, deterministic planning/regeneration, mocked OpenAI structured parsing, representative frame extraction/cache reuse, multi-segment FFmpeg output, safe storage paths, and the upload-to-release integration path.
+
+## Continuous integration
+
+GitHub Actions runs the same verification automatically for every push to `main`, every pull request targeting `main`, and manual `workflow_dispatch` runs. CI uses Ubuntu and Node.js 22, installs and verifies FFmpeg/FFprobe, then runs `npm ci`, lint, typecheck, the complete test suite (including real FFmpeg integration tests), and the production build. Normal CI uses the deterministic/mocked AI providers and does not require `OPENAI_API_KEY`.
 
 ## Docker
 
