@@ -26,16 +26,22 @@ If useful adjacent work is discovered but is not required now, record it as a fo
 
 When an Issue explicitly names a library, template, component system, or OSS foundation to adopt, treat the adoption method as part of the implementation contract.
 
-- Use the project's official install/distribution mechanism when one exists.
+- Use the project's official install/distribution mechanism by default when one exists.
+- An upstream-derived fork, vendored source, source snapshot, or local copy is acceptable only when the active Issue explicitly approves that adoption mode; keep provenance to the upstream source traceable.
 - Reuse the actual source/package/component rather than silently hand-writing an imitation.
-- Record the source and the concrete adoption evidence when the method matters, such as package/registry name, install command, generated/imported files, or license/provenance.
-- If clean adoption is blocked, stop and report the blocker and alternatives. Do not silently substitute a custom implementation that changes the agreed strategy.
+- Record the source and the concrete adoption evidence when the method matters, such as package/registry name, install command, generated/imported files, upstream reference, or license/provenance.
+- If clean adoption under the approved mode is blocked, stop and report the blocker and alternatives. Do not silently substitute a custom implementation that changes the agreed strategy.
 
 ## Context authority
 
-Treat the active Issue and repository sources of truth as the durable task contract. Prior chats, closed Issues, old PR descriptions, and superseded plans are historical context, not current authority.
+Treat the active Issue and repository sources of truth as the durable task contract, with authority determined by scope rather than recency.
 
-If authoritative sources conflict, do not silently choose one. Determine whether the newer decision intentionally supersedes the old one, update the affected source of truth when appropriate, or stop and report the conflict before implementation.
+- The active Issue owns the task goal, scope, acceptance criteria, and approved task-specific decisions.
+- Repository sources of truth own persistent product, architecture, design, engineering, and quality invariants within their documented domains.
+- A newer Issue does not override a repository source of truth merely because it is newer. If the task intentionally changes a persistent invariant, update the affected source of truth through Context Sync before continuing implementation.
+- Prior chats, closed Issues, old PR descriptions, and superseded plans are historical context, not current authority.
+
+If authoritative sources still conflict after applying these domain boundaries, do not silently choose one. Reconcile the conflict, update the affected source of truth when appropriate, or stop and report the conflict before implementation.
 
 ## Context sync before strategy changes
 
@@ -86,9 +92,10 @@ When an agent failure is found, classify it before adding more rules:
 - **systemic:** a durable harness/repository gap is likely to cause meaningful recurrence; make the smallest reusable change that would prevent or expose it earlier
 - **transient/external:** a temporary tool, service, package registry, flaky test, model, or environment failure; do not turn it into permanent policy without evidence of recurrence
 
-For a failure-driven harness change, sanity-check at least two cases:
+For a failure-driven harness change, sanity-check at least three cases:
 
-1. the original failure should now be prevented or exposed earlier
-2. an ordinary task should remain simple and unobstructed
+1. **positive/original failure:** the original failure should now be prevented or exposed earlier
+2. **near-miss safe counterexample:** a closely related valid exception should not be incorrectly blocked or forced into the new rule
+3. **ordinary unrelated task:** unrelated work should remain simple and unobstructed
 
 Add orchestration, agents, MCPs, formal evals, mechanical checks, tests, or policy layers only when repeated or high-cost failures demonstrate that they are needed.
