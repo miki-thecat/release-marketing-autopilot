@@ -10,10 +10,12 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # ReleaseFlow repository guide
 
-ReleaseFlow turns a browser recording and feature details into a release video and English social copy. Start with [docs/PRODUCT.md](docs/PRODUCT.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/DESIGN.md](docs/DESIGN.md), [docs/QUALITY.md](docs/QUALITY.md), and [docs/exec-plans/](docs/exec-plans/).
+ReleaseFlow turns a browser recording and feature details into a release video and English social copy. Start with [docs/PRODUCT.md](docs/PRODUCT.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/DESIGN.md](docs/DESIGN.md), [docs/ENGINEERING.md](docs/ENGINEERING.md), [docs/QUALITY.md](docs/QUALITY.md), and [docs/exec-plans/](docs/exec-plans/).
 
 Inspect the relevant implementation, tests, and docs before coding. Preserve existing behavior unless the task explicitly changes it. Do not invent undocumented product requirements: when an ambiguity does not block safe work, preserve the behavior and record it; escalate only when a product decision is required to complete the task safely.
 
-Keep changes within scope and prefer existing abstractions. Use tests and runtime evidence over assumptions. Use a short execution plan in `docs/exec-plans/active/` only for genuinely non-trivial work, then move it to `completed/` with the result.
+Keep changes within scope. Follow `docs/ENGINEERING.md` for reuse decisions, minimum-necessary changes, external adoption, context authority, and material strategy resets. Sync the active Issue and affected source-of-truth docs before continuing after a material change.
+
+Use tests and runtime evidence over assumptions. Use a short execution plan in `docs/exec-plans/active/` only for genuinely non-trivial work, then move it to `completed/` with the result.
 
 Run `npm run verify` before handoff, explaining any omission. Do not force subagents, skills, or broad refactors for ordinary tasks; add repository-local skills only for a proven, repeated ReleaseFlow-specific workflow.
