@@ -98,4 +98,6 @@ For a failure-driven harness change, sanity-check at least three cases:
 2. **near-miss safe counterexample:** a closely related valid exception should not be incorrectly blocked or forced into the new rule
 3. **ordinary unrelated task:** unrelated work should remain simple and unobstructed
 
+For the external-adoption incident, for example: "adopt Tailark Dusk" is the positive case; "use Tailark only as visual inspiration" is a near-miss that should not imply source adoption; an unrelated database fix should remain unaffected.
+
 Add orchestration, agents, MCPs, formal evals, mechanical checks, tests, or policy layers only when repeated or high-cost failures demonstrate that they are needed.
