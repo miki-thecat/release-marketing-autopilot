@@ -2,7 +2,6 @@ export const en = {
   localeName: "English",
   nav: {
     badge: "Release marketing autopilot",
-    pricing: "Founder plan",
   },
   hero: {
     eyebrow: "From shipped to shared",
@@ -22,6 +21,7 @@ export const en = {
     recordingLabel: "Browser screen recording",
     recordingHint: "MP4 or MOV · up to 500 MB · up to 90 seconds",
     recordingEmpty: "Drop your recording here or choose a file",
+    startCue: "Start here — upload a rough recording to create your Release Pack.",
     recordingSelected: "Recording selected",
     replace: "Replace",
     featureNameLabel: "Feature name",
@@ -77,8 +77,9 @@ export const en = {
     newRelease: "Create another release",
     previewLabel: "Generated release video preview",
     socialVideoLabel: "Release video attached to the social post preview",
-    xAudience: "@releaseflow · now",
-    linkedinAudience: "Product update · 1st",
+    publisherName: "Your account",
+    xAudience: "@yourhandle · now",
+    linkedinAudience: "Your account · 1st",
     characters: "characters",
     xPreviewNote: "X preview",
     linkedinPreviewNote: "LinkedIn preview",

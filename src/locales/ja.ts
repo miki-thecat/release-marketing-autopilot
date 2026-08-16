@@ -4,7 +4,6 @@ export const ja = {
   localeName: "日本語",
   nav: {
     badge: "リリースマーケティング・オートパイロット",
-    pricing: "Founderプラン",
   },
   hero: {
     eyebrow: "リリースから発信までを、ひとつに",
@@ -24,6 +23,7 @@ export const ja = {
     recordingLabel: "ブラウザの画面録画",
     recordingHint: "MP4またはMOV · 最大500 MB · 最大90秒",
     recordingEmpty: "ここに録画をドロップ、またはファイルを選択",
+    startCue: "ここから開始：ラフな録画をアップロードしてRelease Packを作成します。",
     recordingSelected: "録画を選択しました",
     replace: "変更",
     featureNameLabel: "機能名",
@@ -79,8 +79,9 @@ export const ja = {
     newRelease: "別のリリースを作成",
     previewLabel: "生成されたリリース動画のプレビュー",
     socialVideoLabel: "投稿プレビューに添付されたリリース動画",
-    xAudience: "@releaseflow · たった今",
-    linkedinAudience: "プロダクトアップデート · 1次",
+    publisherName: "あなたのアカウント",
+    xAudience: "@yourhandle · たった今",
+    linkedinAudience: "あなたのアカウント · 1次",
     characters: "文字",
     xPreviewNote: "Xプレビュー",
     linkedinPreviewNote: "LinkedInプレビュー",

@@ -201,16 +201,6 @@ export function ReleaseFlowApp() {
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            className="text-button"
-            onClick={() => {
-              track("pricing_viewed");
-              track("founder_plan_clicked");
-            }}
-          >
-            {t.nav.pricing}
-          </button>
         </div>
       </header>
 
@@ -236,6 +226,8 @@ export function ReleaseFlowApp() {
               <span className="card-icon"><PlusIcon /></span>
               <div><h2>{t.form.title}</h2><p>{t.form.subtitle}</p></div>
             </div>
+
+            {!file && <p className="start-cue"><ArrowIcon />{t.form.startCue}</p>}
 
             {displayedError && <div className="error-banner" role="alert"><AlertIcon />{displayedError}</div>}
 
@@ -312,9 +304,9 @@ export function ReleaseFlowApp() {
                 <button type="button" className={socialTab === "linkedin" ? "active" : ""} aria-pressed={socialTab === "linkedin"} onClick={() => setSocialTab("linkedin")}>in {t.result.linkedinPost}</button>
               </div>
               <div className="post-preview">
-                <div className="post-author"><span className="post-avatar">R</span><div><strong>ReleaseFlow</strong><small>{socialTab === "x" ? t.result.xAudience : t.result.linkedinAudience}</small></div><span className="post-network">{socialTab === "x" ? "𝕏" : "in"}</span></div>
+                <div className="post-author"><span className="post-avatar">Y</span><div><strong>{t.result.publisherName}</strong><small>{socialTab === "x" ? t.result.xAudience : t.result.linkedinAudience}</small></div><span className="post-network">{socialTab === "x" ? "𝕏" : "in"}</span></div>
                 <p>{socialTab === "x" ? release.copy.xPost : release.copy.linkedinPost}</p>
-                <div className="post-media"><video muted playsInline preload="metadata" src={release.videoUrl} aria-label={t.result.socialVideoLabel} /><span><VideoIcon />{t.result.video}</span></div>
+                <div className="post-media"><video autoPlay loop muted playsInline preload="auto" src={release.videoUrl} aria-label={t.result.socialVideoLabel} onLoadedMetadata={(event) => { event.currentTarget.currentTime = Math.min(1, event.currentTarget.duration || 0); }} /><span><VideoIcon />{t.result.video}</span></div>
                 <div className="post-meta"><span>{socialTab === "x" ? `${release.copy.xPost.length} / 280` : `${release.copy.linkedinPost.length} ${t.result.characters}`}</span><span>{socialTab === "x" ? t.result.xPreviewNote : t.result.linkedinPreviewNote}</span></div>
               </div>
               <button type="button" className={`copy-button ${copied === socialTab ? "copied" : ""}`} onClick={() => copySocial(socialTab)} aria-live="polite"><CopyIcon />{copied === socialTab ? t.result.copied : t.result.copy}</button>
