@@ -30,19 +30,21 @@ Codex-managed worktrees can run `npm ci`, `npm run dev`, and `npm run verify` wi
 The normal workflow is:
 
 1. create a scoped GitHub Issue with verifiable acceptance criteria
-2. sync the Issue and relevant source-of-truth docs first if the product, architecture, major foundation/dependency, or implementation strategy has materially changed
-3. start a fresh coding-agent chat and worktree for the new non-trivial Issue
+2. sync the Issue and relevant source-of-truth docs first if the current product, architecture, foundational dependency, or implementation strategy has materially changed as defined in `docs/ENGINEERING.md`
+3. start a fresh coding-agent chat and worktree for a new non-trivial Issue when that is the simplest capable workflow
 4. implement only the Issue scope, using targeted checks while iterating
 5. run `npm run verify`
 6. push/open a PR that links and closes the Issue
-7. when implementation method or external-source provenance matters, review that contract/evidence before spending time on visual or runtime polish
+7. when implementation method or external-source provenance matters, review that contract/evidence before spending time on runtime or product polish
 8. wait for GitHub Actions and obtain independent review
 9. verify runtime and product/visual quality where relevant
 10. fix findings on the same branch/worktree/PR, then squash merge
 
-Ordinary review fixes under the same implementation strategy normally stay in the same coding-agent chat. If the strategy itself materially resets, prefer a fresh coding-agent chat while keeping the same Issue/branch/worktree/PR when those still represent the same unit of work. The repository and PR discussion are the handoff, not the previous chat history.
+Ordinary review fixes may stay in the same coding-agent chat when the current context remains useful. Prefer a fresh agent session when prior conversational context is likely to bias the work toward a superseded strategy. The active Issue, repository docs, git history, and PR discussion are the durable handoff, not previous chat memory.
 
-Use the lightweight reuse/adoption and stop-condition rules in `docs/ENGINEERING.md`; do not turn ordinary changes into process-heavy exercises.
+For narrow documentation, template, or repository-metadata changes, a direct repository tool may be simpler than a coding-agent worktree. Keep meaningful changes isolated and reviewable through the normal branch/PR process.
+
+Use the reuse, minimum-complete-change, context-authority, external-adoption, and stop-condition rules in `docs/ENGINEERING.md`; do not turn ordinary changes into process-heavy exercises.
 
 For runtime diagnostics, the project-scoped `next-devtools` MCP server is configured in `.codex/config.toml`. Start `npm run dev`, then confirm the coding agent has loaded `next-devtools`; it automatically discovers the running Next.js 16+ app and can inspect routes, logs, and compilation issues. If it is not available, restart the agent after confirming the config and running dev server.
 
@@ -68,7 +70,7 @@ Playwright and browser E2E coverage are not installed. When a change affects the
 
 ## Definition of done
 
-- The implementation and docs match the requested scope and current strategy.
+- The implementation and docs match the requested scope, current strategy, and authoritative task context.
 - Method-sensitive acceptance criteria and required provenance/evidence are satisfied when relevant.
 - Relevant tests and checks pass, or exceptions are recorded.
 - Runtime/product evidence is included when the change needs it.
