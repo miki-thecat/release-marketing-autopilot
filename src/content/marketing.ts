@@ -6,7 +6,6 @@ export type DemoExample = {
   hook: string;
   post: string;
   duration: string;
-  accent: "coral" | "lime" | "blue" | "violet";
 };
 
 export const marketingContent = {
@@ -39,44 +38,31 @@ export const marketingContent = {
   },
   demos: [
     {
-      id: "search",
-      label: "AI Search",
-      title: "Find the right work without remembering where it lives.",
-      description: "A search launch shaped into a compact product story with a clear outcome.",
-      hook: "Search every project in plain English",
-      post: "Your workspace finally answers back. AI Search is now live across projects, tasks, and docs.",
+      id: "feature-launch",
+      label: "Feature Launch",
+      title: "A focused feature story with the product moment at its center.",
+      description: "An internal example of the release video, X post, and LinkedIn post moving from the same source recording.",
+      hook: "Show the moment the feature clicks",
+      post: "The release story is already in the walkthrough. ReleaseFlow shapes it into a video and launch-ready copy.",
       duration: "00:24",
-      accent: "coral",
     },
     {
-      id: "approvals",
-      label: "Approvals",
-      title: "Move work forward without chasing the next reviewer.",
-      description: "A workflow update framed around momentum rather than a list of controls.",
-      hook: "Approvals that keep moving",
-      post: "Route, review, and resolve approvals from one place—with the full decision trail attached.",
+      id: "product-launch",
+      label: "Product Launch",
+      title: "A concise launch narrative for the product surface that changed.",
+      description: "An internal example of one browser recording turned into a release package without a separate production workflow.",
+      hook: "Bring the product story forward",
+      post: "A clear release does not require three disconnected handoffs. Start with the recording already on hand.",
       duration: "00:19",
-      accent: "lime",
     },
     {
-      id: "insights",
-      label: "Usage Insights",
-      title: "See adoption while there is still time to act.",
-      description: "A dense analytics capability translated into an easy-to-follow release narrative.",
-      hook: "Know what users adopt next",
-      post: "Usage Insights turns feature activity into a clear view of adoption, drop-off, and opportunity.",
+      id: "changelog",
+      label: "Changelog",
+      title: "A smaller product update given a coherent external frame.",
+      description: "An internal example for the changes that deserve more than a line item but less than a production sprint.",
+      hook: "Keep the change easy to understand",
+      post: "The product moved. Make the announcement easy to watch, share, and carry across the channels that matter.",
       duration: "00:27",
-      accent: "blue",
-    },
-    {
-      id: "deployments",
-      label: "Deploy Guard",
-      title: "Ship with context before risk reaches production.",
-      description: "A technical release made legible through precise pacing and restrained annotation.",
-      hook: "Catch deployment risk earlier",
-      post: "Deploy Guard now flags release risk before production and keeps every check tied to the change.",
-      duration: "00:22",
-      accent: "violet",
     },
   ] satisfies DemoExample[],
   transformation: {

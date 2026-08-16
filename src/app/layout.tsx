@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_LOCALE } from "@/locales";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang={DEFAULT_LOCALE} data-scroll-behavior="smooth">
       <body>{children}</body>
     </html>
   );

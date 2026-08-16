@@ -2,14 +2,12 @@
 
 ## Web v2 direction
 
-The marketing site uses **technical precision × editorial launch energy**: a near-black and warm off-white foundation, a restrained signal-orange accent, large type, generous spacing, product-scale proof surfaces, and deliberate light/dark chapter changes. Motion is limited to short state transitions and is disabled by the existing reduced-motion rule.
+The marketing site adopts the current **Tailark OSS Dusk** visual system rather than maintaining a ReleaseFlow-specific art direction. Dusk Landing Page Two supplies the page foundation; its Hero Section Two, Features Five, FAQs One, Call to Action Two, and Footer Two inform the retained sections. The page keeps Dusk's dark palette, rounded proof frames, quiet borders, large type, generous spacing, and restrained transitions.
 
 ### Stable site layer
 
-- Global navigation and native-dialog mobile navigation
-- Container/grid system, typography hierarchy, spacing, color tokens, lines, and radii
-- Section labels and headings, light/dark chapter rhythm, and responsive breakpoints
-- Demo-gallery frame, before/after shell, process cards, FAQ details, final CTA, and footer
+- Dusk-derived global navigation, container/grid system, typography hierarchy, tokens, spacing, radii, borders, cards, FAQ, CTA, footer, and responsive breakpoints
+- Product proof frames for the ReleaseFlow workflow: create, plan, processing, render, and Release Pack
 - Keyboard focus, route links, semantic landmarks, and reduced-motion behavior
 
 These patterns live in `src/components/marketing/` and accept content rather than encoding a specific future input model.
@@ -22,24 +20,22 @@ Current hero messaging, product promise, target audiences, capability wording, F
 
 ### Page architecture
 
-1. Navigation
-2. Product-first hero and entry adapter
-3. Internal example/output proof gallery
+1. Dusk navigation and hero
+2. Product entry adapter
+3. Internal Feature Launch, Product Launch, and Changelog proof examples
 4. Before/after transformation
 5. Three-step process
-6. Dark capability proof chapter
+6. Dusk Features Five-style product walkthrough
 7. Current use-case hypotheses
-8. FAQ
-9. Final CTA
-10. Footer
+8. Dusk FAQ
+9. Dusk CTA Two
+10. Dusk Footer Two
 
 The existing working product remains at `/create`. The homepage uses Server Components by default; only the mobile dialog, demo tabs, and before/after switch are client components.
 
 ### ReleaseFlow-specific custom areas
 
-Custom design effort is concentrated in the product-entry console, ReleaseFlow demo canvas, coordinated-output capability visual, and transformation shell. Navigation, links, FAQ disclosure, buttons, and responsive grids use native or simple proven primitives.
-
-All gallery items are explicitly internal demos. Their CSS-rendered surfaces are intentionally provisional and should be replaced with production media when available without changing gallery layout or interaction.
+Custom work is limited to adapting Dusk proof frames with the real ReleaseFlow input and outputs, preserving the `ProductEntryAdapter`, and keeping the content module replaceable. All examples are explicitly internal demos; production media can replace their representative proof surfaces without changing the Dusk layout.
 
 ## Product shape
 
