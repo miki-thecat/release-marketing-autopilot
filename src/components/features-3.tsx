@@ -1,0 +1,9 @@
+// Adapted from Tailark OSS Dusk Features 3, installed with shadcn CLI.
+import { Play } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { marketingContent } from "@/content/marketing";
+
+export default function FeaturesThree() {
+  const { proof, demos } = marketingContent;
+  return <section id="examples" className="py-16 md:py-20"><div className="mx-auto max-w-7xl px-6"><h2 className="max-w-4xl text-balance text-4xl font-medium tracking-tight text-muted-foreground"><span className="text-foreground">{proof.title}</span><br />{proof.description}</h2><div className="mt-8 grid gap-x-3 gap-y-6 md:mt-16 md:grid-cols-3">{demos.map((demo) => <article key={demo.id} className="grid gap-4"><Card className="relative aspect-[9/11] overflow-hidden p-4"><span className="rounded-full border border-border px-2 py-1 text-[10px] text-muted-foreground">Internal demo</span><div className="absolute inset-x-4 top-16 rounded-xl border border-border bg-background p-3 shadow-xl"><div className="flex justify-between text-[10px] text-muted-foreground"><span>RELEASE VIDEO</span><span>{demo.duration}</span></div><div className="mt-3 grid aspect-video place-items-center rounded-lg bg-foreground text-background"><Play className="size-5 fill-current" /></div><p className="mt-3 text-sm font-medium">{demo.hook}</p></div><div className="absolute inset-x-4 bottom-4 rounded-xl border border-border bg-background p-3 shadow-xl"><span className="text-[10px] text-muted-foreground">LAUNCH COPY</span><p className="mt-2 text-xs leading-relaxed text-muted-foreground">{demo.post}</p></div></Card><div><p className="text-sm font-medium">{demo.label}</p><h3 className="mt-2 text-lg font-medium tracking-tight">{demo.title}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{demo.description}</p></div></article>)}</div></div></section>;
+}
