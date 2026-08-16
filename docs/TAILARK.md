@@ -4,12 +4,13 @@ ReleaseFlow Web v2 adopts Tailark OSS Dusk through the public shadcn registry, n
 
 ## Registry and install record
 
-- Registry: `@tailark-oss` → `https://oss.tailark.com/r/{name}.json` in `components.json` (Base UI).
+- Registry: `@tailark-oss` → `https://oss-tailark.com/r/{name}` in `components.json` (Base UI). This is the current Base UI endpoint documented by the official `tailark/blocks` README.
 - Official commands run from the repository root:
 
   ```bash
   npx shadcn@latest search @tailark-oss -q dusk -l 100 --json
   npx shadcn@latest view @tailark-oss/dusk-landing-2
+  npx shadcn@latest view @tailark-oss/dusk-features-5
   npx shadcn@latest add @tailark-oss/dusk-landing-2 @tailark-oss/dusk-features-5 --yes --overwrite
   ```
 
