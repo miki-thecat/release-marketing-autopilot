@@ -14,7 +14,7 @@ ReleaseFlow turns a browser recording and feature details into a release video a
 
 Inspect the relevant implementation, tests, and docs before coding. Preserve existing behavior unless the task explicitly changes it. Do not invent undocumented product requirements: when an ambiguity does not block safe work, preserve the behavior and record it; escalate only when a product decision is required to complete the task safely.
 
-Keep changes within scope and follow the reuse-first guidance in `docs/ENGINEERING.md`. If product requirements, architecture, a major dependency/foundation, or the implementation strategy changes materially, update the active Issue and relevant source-of-truth docs before continuing implementation. If a task explicitly adopts an external library/template and its official distribution path is available, use the actual dependency/source rather than silently hand-writing an imitation; report a blocker instead of changing the agreed strategy without notice.
+Keep changes within scope. Follow `docs/ENGINEERING.md` for reuse decisions, minimum-necessary changes, external adoption, context authority, and material strategy resets. Sync the active Issue and affected source-of-truth docs before continuing after a material change.
 
 Use tests and runtime evidence over assumptions. Use a short execution plan in `docs/exec-plans/active/` only for genuinely non-trivial work, then move it to `completed/` with the result.
 
