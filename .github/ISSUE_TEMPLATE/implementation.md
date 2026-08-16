@@ -9,6 +9,8 @@ about: Focused engineering work for ReleaseFlow
 
 # Acceptance Criteria
 
-# Out of Scope
+# Constraints / Out of Scope
 
 # Context / Evidence
+
+# Validation / Done Evidence

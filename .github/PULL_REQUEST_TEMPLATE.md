@@ -1,11 +1,14 @@
-# Summary
+<!-- Link the issue with `Closes #...` when appropriate. -->
+Closes #
 
-# Why
+## Summary
 
-# Validation
+## Why
 
-# UI / Runtime Evidence
+## Validation
 
-Only when relevant.
+## UI / Runtime Evidence
 
-# Risks / Follow-ups
+<!-- Add only when relevant. -->
+
+## Risks / Follow-ups

@@ -21,6 +21,14 @@ ReleaseFlow helps a SaaS or developer-tool team finish a release announcement af
 - The Local Core MVP has no authentication, billing, database, durable queue, or social posting integration.
 - Voiceover, music, advanced timeline editing, and broad localization are out of scope.
 
+## Current product strategy
+
+The initial target is founder-led small B2B SaaS and DevTool teams. ReleaseFlow's core job is to finish release-announcement work after a feature ships: turn a rough browser recording and short feature description into a usable release video and English social copy in minutes.
+
+The current monetization hypothesis is a paid SaaS at approximately USD 29/month. The commercial number and target details are hypotheses to validate, not permanent product requirements. Validation focuses on a real recording being supplied, output actually being posted, a user paying, and repeat use on a later release.
+
+For MVP decisions, prioritize paying-user validation, time-to-value, output quality, repeat usage, and distribution before engineering sophistication. Avoid premature infrastructure or generalized editing features unless they materially improve validation or the release-announcement job.
+
 ## Open product decisions
 
 - TODO: Define the requirements and priority for optional Japanese release-copy output.

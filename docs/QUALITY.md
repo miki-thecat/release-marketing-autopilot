@@ -25,6 +25,12 @@ The Vitest suite includes validation, deterministic and mocked OpenAI planning, 
 
 Codex-managed worktrees can run `npm ci`, `npm run dev`, and `npm run verify` without copied API keys because the application and CI have deterministic or mocked fallbacks.
 
+## Issue-driven development
+
+The normal workflow is: create a scoped GitHub Issue; start a fresh Codex chat and worktree for that Issue; implement only its scope; use targeted checks while iterating; run `npm run verify`; push or open a PR that links and closes the Issue; wait for GitHub Actions; obtain independent review; fix findings on the same branch; then squash merge.
+
+For runtime diagnostics, the project-scoped `next-devtools` MCP server is configured in `.codex/config.toml`. Start `npm run dev`, then confirm the coding agent has loaded `next-devtools`; it automatically discovers the running Next.js 16+ app and can inspect routes, logs, and compilation issues. If it is not available, restart the agent after confirming the config and running dev server.
+
 ## Browser validation
 
 Playwright and browser E2E coverage are not installed. When a change affects the user workflow, manually verify the affected path where practical. Future E2E candidates are:

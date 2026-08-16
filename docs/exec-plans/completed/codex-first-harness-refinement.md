@@ -12,15 +12,15 @@ Refine the repository development workflow without changing ReleaseFlow product 
 
 ## Decisions
 
-- Do not add `.codex/config.toml`: the installed Codex CLI confirms global MCP syntax but does not establish project-scoped config discovery.
+- The later Harness v1 migration adds only the project-scoped Next.js DevTools MCP configuration required for runtime inspection.
 - Do not add skills, hooks, a custom worktree manager, `.worktreeinclude`, or Playwright.
 
 ## Result
 
 - [x] Inspected Next.js, Codex configuration, CI, docs, and current files.
 - [x] Applied the minimal workflow changes.
-- [x] Passed `npm run verify` (lint, typecheck, 8 test files / 18 tests, and production build).
+- [x] Passed `npm run verify` at committed SHA `a06e7be` (lint, typecheck, 7 test files / 15 tests, and production build).
 
 ## Notes
 
-Next.js DevTools MCP is supported by Next.js 16.3.1, but it was not configured or runtime-tested because project-scoped Codex configuration loading could not be verified from the installed Codex CLI. The test environment emitted non-fatal local Fontconfig cache warnings.
+The test environment emitted non-fatal local Fontconfig cache warnings. Next.js DevTools MCP runtime verification is recorded with the Harness v1 migration rather than attributed to this earlier commit.

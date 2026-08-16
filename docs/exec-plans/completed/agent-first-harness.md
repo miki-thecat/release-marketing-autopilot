@@ -19,7 +19,7 @@ Add concise repository guidance and factual documentation so ChatGPT and Codex c
 
 - [x] Inspected the current repository, tests, scripts, and CI.
 - [x] Added the requested guidance and documentation.
-- [x] Passed `npm run lint`, `npm run typecheck`, `npm test` (8 files, 18 tests), and `npm run build`.
+- [x] Passed `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`.
 
 ## Notes
 
