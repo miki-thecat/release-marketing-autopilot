@@ -1,6 +1,6 @@
 "use client";
 
-import { type ChangeEvent, type DragEvent, type FormEvent, useRef, useState } from "react";
+import { type ChangeEvent, type DragEvent, type FormEvent, useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics/track";
 import type {
   RegenerationIntent,
@@ -41,6 +41,13 @@ export function ReleaseFlowApp() {
   const [customInstruction, setCustomInstruction] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const t = locales[locale];
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+    return () => {
+      document.documentElement.lang = "en";
+    };
+  }, [locale]);
 
   function selectLocale(nextLocale: Locale) {
     setLocale(nextLocale);

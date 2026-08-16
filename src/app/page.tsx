@@ -1,5 +1,5 @@
-import { ReleaseFlowApp } from "@/components/release-flow-app";
+import { MarketingPage } from "@/components/marketing/marketing-page";
 
 export default function Home() {
-  return <ReleaseFlowApp />;
+  return <MarketingPage />;
 }

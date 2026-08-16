@@ -13,7 +13,7 @@
 }
 
 * { box-sizing: border-box; }
-html { min-width: 320px; background: var(--wash); }
+html { min-width: 320px; background: var(--wash); scroll-behavior: smooth; }
 body { margin: 0; color: var(--ink); background: radial-gradient(circle at 85% 5%, #e2f8ef 0, transparent 25rem), linear-gradient(#fbfcfc, #f4f7f6); font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif; }
 button, input, textarea { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
