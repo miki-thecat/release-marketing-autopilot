@@ -1,8 +1,14 @@
 # Quality
 
-## Required local checks
+## Local verification
 
-Run the following before handing off a change unless a command is not relevant, unavailable, or unsafe; explain any omission.
+Run `npm run verify` before handing off a change unless it is not relevant, unavailable, or unsafe; explain any omission. It runs the complete local sequence:
+
+```bash
+npm run verify
+```
+
+The component checks remain available for focused diagnosis and are deliberately separate in GitHub Actions:
 
 ```bash
 npm run lint
@@ -16,6 +22,8 @@ The Vitest suite includes validation, deterministic and mocked OpenAI planning, 
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs on pushes to `main`, pull requests targeting `main`, and manual dispatch. It installs Node.js 22, dependencies, FFmpeg, and Noto fonts; verifies FFmpeg/FFprobe; then runs lint, typecheck, tests, and the production build. It uses deterministic or mocked AI providers and does not require `OPENAI_API_KEY`.
+
+Codex-managed worktrees can run `npm ci`, `npm run dev`, and `npm run verify` without copied API keys because the application and CI have deterministic or mocked fallbacks.
 
 ## Browser validation
 

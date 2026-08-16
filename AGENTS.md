@@ -10,10 +10,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # ReleaseFlow repository guide
 
-ReleaseFlow turns a browser recording and feature details into a release video plus English X and LinkedIn copy. The current product and technical boundaries are documented in [docs/PRODUCT.md](docs/PRODUCT.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/DESIGN.md](docs/DESIGN.md), and [docs/QUALITY.md](docs/QUALITY.md).
+ReleaseFlow turns a browser recording and feature details into a release video and English social copy. Start with [docs/PRODUCT.md](docs/PRODUCT.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/DESIGN.md](docs/DESIGN.md), [docs/QUALITY.md](docs/QUALITY.md), and [docs/exec-plans/](docs/exec-plans/).
 
-Before changing code, inspect the relevant route, component, library, test, and documentation. Keep work inside the requested scope; do not add product features, infrastructure, or broad refactors unless the task requires them. If a product decision is not documented, mark it `TODO` or ask for direction rather than inferring it.
+Inspect the relevant implementation, tests, and docs before coding. Preserve existing behavior unless the task explicitly changes it. Do not invent undocumented product requirements: when an ambiguity does not block safe work, preserve the behavior and record it; escalate only when a product decision is required to complete the task safely.
 
-For non-trivial work, create a short plan in `docs/exec-plans/active/` before implementation. Record the goal, scope, decisions, progress, and validation; move it to `docs/exec-plans/completed/` when finished. Trivial internal edits do not need a repository plan.
+Keep changes within scope and prefer existing abstractions. Use tests and runtime evidence over assumptions. Use a short execution plan in `docs/exec-plans/active/` only for genuinely non-trivial work, then move it to `completed/` with the result.
 
-Validate relevant changes with `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`; explain any command intentionally not run. Prefer an existing applicable skill when it clearly fits, but do not add repository-local skills until a concrete, repeated workflow justifies one.
+Run `npm run verify` before handoff, explaining any omission. Do not force subagents, skills, or broad refactors for ordinary tasks; add repository-local skills only for a proven, repeated ReleaseFlow-specific workflow.
