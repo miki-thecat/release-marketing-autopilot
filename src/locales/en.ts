@@ -11,6 +11,10 @@ export const en = {
     description:
       "Turn a rough browser recording into a polished release video and launch-ready social copy—in one focused flow.",
     trust: "Built for founder-led SaaS and DevTool teams",
+    packPreviewLabel: "Your completed Release Pack",
+    packVideo: "Release video",
+    packX: "X post",
+    packLinkedIn: "LinkedIn post",
   },
   form: {
     title: "Create a Feature Release",
@@ -25,6 +29,7 @@ export const en = {
     descriptionLabel: "What did you ship?",
     descriptionPlaceholder:
       "Users can now search across projects, tasks, and documents using natural language.",
+    descriptionHelper: "Explain what changed, who benefits, and why it matters. ReleaseFlow turns that into the story behind your video and posts.",
     productUrlLabel: "Product URL",
     optional: "Optional",
     productUrlPlaceholder: "https://flowbase.ai",
@@ -71,6 +76,12 @@ export const en = {
     cancel: "Cancel",
     newRelease: "Create another release",
     previewLabel: "Generated release video preview",
+    socialVideoLabel: "Release video attached to the social post preview",
+    xAudience: "@releaseflow · now",
+    linkedinAudience: "Product update · 1st",
+    characters: "characters",
+    xPreviewNote: "X preview",
+    linkedinPreviewNote: "LinkedIn preview",
   },
   errors: {
     requiredFields: "Add a recording, feature name, and description to continue.",

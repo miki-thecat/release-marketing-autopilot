@@ -13,6 +13,10 @@ export const ja = {
     description:
       "ラフなブラウザ録画を、洗練されたリリース動画と投稿文に。迷わず完了できる、ひとつのフローです。",
     trust: "少人数のSaaS・DevToolチームのために設計",
+    packPreviewLabel: "完成するRelease Pack",
+    packVideo: "リリース動画",
+    packX: "Xの投稿",
+    packLinkedIn: "LinkedInの投稿",
   },
   form: {
     title: "Feature Releaseを作成",
@@ -27,6 +31,7 @@ export const ja = {
     descriptionLabel: "どんな機能をリリースしましたか？",
     descriptionPlaceholder:
       "プロジェクト、タスク、ドキュメントを自然言語で横断検索できるようになりました。",
+    descriptionHelper: "何が変わったか、誰に役立つか、なぜ重要かを説明してください。動画と投稿のストーリーに仕上げます。",
     productUrlLabel: "プロダクトURL",
     optional: "任意",
     productUrlPlaceholder: "https://flowbase.ai",
@@ -73,6 +78,12 @@ export const ja = {
     cancel: "キャンセル",
     newRelease: "別のリリースを作成",
     previewLabel: "生成されたリリース動画のプレビュー",
+    socialVideoLabel: "投稿プレビューに添付されたリリース動画",
+    xAudience: "@releaseflow · たった今",
+    linkedinAudience: "プロダクトアップデート · 1次",
+    characters: "文字",
+    xPreviewNote: "Xプレビュー",
+    linkedinPreviewNote: "LinkedInプレビュー",
   },
   errors: {
     requiredFields: "録画、機能名、機能の説明を入力してください。",
