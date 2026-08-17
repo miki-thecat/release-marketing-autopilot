@@ -1,0 +1,4 @@
+// Adapted from Tailark OSS Dusk FAQs 1, installed with shadcn CLI.
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { marketingContent } from "@/content/marketing";
+export default function FAQs() { const { faq } = marketingContent; return <section id="faq" className="py-16 md:py-24"><div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-2 md:gap-6"><div><p className="text-sm text-muted-foreground">{faq.eyebrow}</p><h2 className="mt-4 max-w-sm text-4xl font-medium tracking-tight">{faq.title}</h2></div><Accordion defaultValue={[faq.items[0].question]}><div>{faq.items.map((item) => <AccordionItem key={item.question} value={item.question}><AccordionTrigger>{item.question}</AccordionTrigger><AccordionContent className="text-muted-foreground">{item.answer}</AccordionContent></AccordionItem>)}</div></Accordion></div></section>; }

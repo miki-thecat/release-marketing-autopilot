@@ -1,0 +1,5 @@
+// Adapted from Tailark OSS Dusk Features 4, installed with shadcn CLI.
+import { ArrowRight } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { marketingContent } from "@/content/marketing";
+export default function FeaturesFour() { const { useCases } = marketingContent; return <section id="use-cases" className="py-16 md:py-20"><div className="mx-auto max-w-7xl px-6"><div className="grid gap-6 md:grid-cols-2 md:gap-12"><div><p className="text-sm text-muted-foreground">{useCases.eyebrow}</p><h2 className="mt-4 max-w-md text-balance text-4xl font-medium tracking-tight lg:text-5xl">{useCases.title}</h2></div><p className="self-end text-lg text-muted-foreground">{useCases.description}</p></div><div className="mt-8 grid gap-3 md:mt-16 md:grid-cols-3">{useCases.items.map((item) => <Card key={item.kicker} className="group p-6"><p className="text-sm text-muted-foreground">{item.kicker}</p><h3 className="mt-12 text-xl font-medium tracking-tight">{item.title}</h3><ArrowRight className="mt-8 size-4 text-muted-foreground transition-transform group-hover:translate-x-1" /></Card>)}</div></div></section>; }

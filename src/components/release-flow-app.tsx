@@ -175,7 +175,7 @@ export function ReleaseFlowApp() {
     : undefined;
 
   return (
-    <main className="site-shell">
+    <main className="site-shell" lang={locale}>
       <header className="nav container">
         <button type="button" className="brand-lockup" onClick={reset}>
           <span className="brand-mark">R</span>
