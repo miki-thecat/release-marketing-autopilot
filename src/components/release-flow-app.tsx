@@ -10,9 +10,9 @@ import type {
 } from "@/lib/release/types";
 import { limits } from "@/lib/config";
 import { DEFAULT_LOCALE, locales, type Locale } from "@/locales";
+import { createNewReleasePresentationState, initialReleasePresentationState, type SocialTab } from "./release-presentation-state";
 
 type View = "create" | "processing" | "result";
-type SocialTab = "x" | "linkedin";
 
 const PROCESSING_STAGES = [
   "uploading",
@@ -34,7 +34,7 @@ export function ReleaseFlowApp() {
   const [release, setRelease] = useState<ReleaseRecord>();
   const [errorCode, setErrorCode] = useState<ReleaseErrorCode>();
   const [isDragging, setIsDragging] = useState(false);
-  const [socialTab, setSocialTab] = useState<SocialTab>("x");
+  const [socialTab, setSocialTab] = useState<SocialTab>(initialReleasePresentationState.socialTab);
   const [copied, setCopied] = useState<SocialTab>();
   const [showRegenerate, setShowRegenerate] = useState(false);
   const [regenerateIntent, setRegenerateIntent] = useState<RegenerationIntent>("shorter");
@@ -79,6 +79,8 @@ export function ReleaseFlowApp() {
     }
 
     try {
+      setSocialTab("x");
+      setCopied(undefined);
       setView("processing");
       const createResponse = await fetch("/api/releases", {
         method: "POST",
@@ -120,6 +122,7 @@ export function ReleaseFlowApp() {
   }
 
   function reset() {
+    const nextPresentation = createNewReleasePresentationState();
     setView("create");
     setFile(undefined);
     setFeatureName("");
@@ -127,7 +130,9 @@ export function ReleaseFlowApp() {
     setProductUrl("");
     setRelease(undefined);
     setErrorCode(undefined);
-    setShowRegenerate(false);
+    setSocialTab(nextPresentation.socialTab);
+    setCopied(nextPresentation.copied);
+    setShowRegenerate(nextPresentation.showRegenerate);
     setRegenerateIntent("shorter");
     setCustomInstruction("");
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -196,30 +201,23 @@ export function ReleaseFlowApp() {
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            className="text-button"
-            onClick={() => {
-              track("pricing_viewed");
-              track("founder_plan_clicked");
-            }}
-          >
-            {t.nav.pricing}
-          </button>
         </div>
       </header>
 
       {view === "create" && (
-        <section className="hero container">
+        <section className={`hero container ${file ? "task-started" : ""}`}>
           <div className="hero-copy">
             <div className="eyebrow"><span className="eyebrow-line" />{t.hero.eyebrow}</div>
             <h1>{t.hero.title}<span>{t.hero.titleAccent}</span></h1>
             <p className="hero-description">{t.hero.description}</p>
             <div className="trust-line"><CheckBadgeIcon />{t.hero.trust}</div>
-            <div className="flow-visual" aria-hidden="true">
-              <div className="flow-node"><VideoIcon /></div><span />
-              <div className="flow-node"><WandIcon /></div><span />
-              <div className="flow-node accent"><PackageIcon /></div>
+            <div className="pack-proof" aria-label={t.hero.packPreviewLabel}>
+              <div className="pack-proof-header"><span>{t.hero.packPreviewLabel}</span><CheckIcon /></div>
+              <div className="pack-proof-grid">
+                <div className="proof-video"><VideoIcon /><span>{t.hero.packVideo}</span></div>
+                <div className="proof-post proof-x"><strong>𝕏</strong><span>{t.hero.packX}</span></div>
+                <div className="proof-post proof-linkedin"><strong>in</strong><span>{t.hero.packLinkedIn}</span></div>
+              </div>
             </div>
           </div>
 
@@ -228,6 +226,8 @@ export function ReleaseFlowApp() {
               <span className="card-icon"><PlusIcon /></span>
               <div><h2>{t.form.title}</h2><p>{t.form.subtitle}</p></div>
             </div>
+
+            {!file && <p className="start-cue"><ArrowIcon />{t.form.startCue}</p>}
 
             {displayedError && <div className="error-banner" role="alert"><AlertIcon />{displayedError}</div>}
 
@@ -259,6 +259,7 @@ export function ReleaseFlowApp() {
             <div className="field-group">
               <label htmlFor="description">{t.form.descriptionLabel}</label>
               <textarea id="description" value={description} onChange={(event) => setDescription(event.target.value)} maxLength={limits.maxDescriptionLength} rows={4} placeholder={t.form.descriptionPlaceholder} />
+              <span className="field-helper">{t.form.descriptionHelper}</span>
               <span className="character-count">{description.length} / {limits.maxDescriptionLength}</span>
             </div>
             <div className="field-group">
@@ -297,13 +298,18 @@ export function ReleaseFlowApp() {
               ><DownloadIcon />{t.result.download}</a>
             </article>
 
-            <article className="social-card">
+            <article className={`social-card social-card-${socialTab}`}>
               <div className="social-tabs">
-                <button type="button" className={socialTab === "x" ? "active" : ""} onClick={() => setSocialTab("x")}>{t.result.xPost}<span><CheckIcon /></span></button>
-                <button type="button" className={socialTab === "linkedin" ? "active" : ""} onClick={() => setSocialTab("linkedin")}>{t.result.linkedinPost}<span><CheckIcon /></span></button>
+                <button type="button" className={socialTab === "x" ? "active" : ""} aria-pressed={socialTab === "x"} onClick={() => setSocialTab("x")}>𝕏 {t.result.xPost}</button>
+                <button type="button" className={socialTab === "linkedin" ? "active" : ""} aria-pressed={socialTab === "linkedin"} onClick={() => setSocialTab("linkedin")}>in {t.result.linkedinPost}</button>
               </div>
-              <div className="social-copy"><pre>{socialTab === "x" ? release.copy.xPost : release.copy.linkedinPost}</pre></div>
-              <button type="button" className="copy-button" onClick={() => copySocial(socialTab)}><CopyIcon />{copied === socialTab ? t.result.copied : t.result.copy}</button>
+              <div className="post-preview">
+                <div className="post-author"><span className="post-avatar">Y</span><div><strong>{t.result.publisherName}</strong><small>{socialTab === "x" ? t.result.xAudience : t.result.linkedinAudience}</small></div><span className="post-network">{socialTab === "x" ? "𝕏" : "in"}</span></div>
+                <p>{socialTab === "x" ? release.copy.xPost : release.copy.linkedinPost}</p>
+                <div className="post-media"><video autoPlay loop muted playsInline preload="auto" src={release.videoUrl} aria-label={t.result.socialVideoLabel} onLoadedMetadata={(event) => { event.currentTarget.currentTime = Math.min(1, event.currentTarget.duration || 0); }} /><span><VideoIcon />{t.result.video}</span></div>
+                <div className="post-meta"><span>{socialTab === "x" ? `${release.copy.xPost.length} / 280` : `${release.copy.linkedinPost.length} ${t.result.characters}`}</span><span>{socialTab === "x" ? t.result.xPreviewNote : t.result.linkedinPreviewNote}</span></div>
+              </div>
+              <button type="button" className={`copy-button ${copied === socialTab ? "copied" : ""}`} onClick={() => copySocial(socialTab)} aria-live="polite"><CopyIcon />{copied === socialTab ? t.result.copied : t.result.copy}</button>
             </article>
           </div>
           <div className="result-actions">
@@ -433,8 +439,6 @@ function withDownload(videoUrl: string): string {
 function SparkIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.35 5.65L19 9l-5.65 1.35L12 16l-1.35-5.65L5 9l5.65-1.35L12 2zM19 15l.7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7L19 15z" /></svg>; }
 function CheckBadgeIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.2 1.5 2.7-.1.8 2.6 2.2 1.6-.9 2.5.9 2.5-2.2 1.6-.8 2.6-2.7-.1L12 19.2l-2.2-1.5-2.7.1-.8-2.6-2.2-1.6.9-2.5-.9-2.5L6.3 7l.8-2.6 2.7.1L12 3z"/><path d="M8.5 11.5l2.1 2.1 4.8-5" className="stroke" /></svg>; }
 function VideoIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="3"/><path d="M17 10l4-2v8l-4-2" /></svg>; }
-function WandIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L17 7M14 4l6 6M6 3v3M4.5 4.5h3M18 15v4M16 17h4" /></svg>; }
-function PackageIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7l8-4 8 4v10l-8 4-8-4V7zM4 7l8 4 8-4M12 11v10" /></svg>; }
 function PlusIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>; }
 function AlertIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2L12 3zM12 9v5M12 17.5v.5" /></svg>; }
 function UploadIcon() { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 15v4h14v-4" /></svg>; }

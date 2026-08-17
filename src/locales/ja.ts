@@ -4,7 +4,6 @@ export const ja = {
   localeName: "日本語",
   nav: {
     badge: "リリースマーケティング・オートパイロット",
-    pricing: "Founderプラン",
   },
   hero: {
     eyebrow: "リリースから発信までを、ひとつに",
@@ -13,6 +12,10 @@ export const ja = {
     description:
       "ラフなブラウザ録画を、洗練されたリリース動画と投稿文に。迷わず完了できる、ひとつのフローです。",
     trust: "少人数のSaaS・DevToolチームのために設計",
+    packPreviewLabel: "完成するRelease Pack",
+    packVideo: "リリース動画",
+    packX: "Xの投稿",
+    packLinkedIn: "LinkedInの投稿",
   },
   form: {
     title: "Feature Releaseを作成",
@@ -20,6 +23,7 @@ export const ja = {
     recordingLabel: "ブラウザの画面録画",
     recordingHint: "MP4またはMOV · 最大500 MB · 最大90秒",
     recordingEmpty: "ここに録画をドロップ、またはファイルを選択",
+    startCue: "ここから開始：ラフな録画をアップロードしてRelease Packを作成します。",
     recordingSelected: "録画を選択しました",
     replace: "変更",
     featureNameLabel: "機能名",
@@ -27,6 +31,7 @@ export const ja = {
     descriptionLabel: "どんな機能をリリースしましたか？",
     descriptionPlaceholder:
       "プロジェクト、タスク、ドキュメントを自然言語で横断検索できるようになりました。",
+    descriptionHelper: "何が変わったか、誰に役立つか、なぜ重要かを説明してください。動画と投稿のストーリーに仕上げます。",
     productUrlLabel: "プロダクトURL",
     optional: "任意",
     productUrlPlaceholder: "https://flowbase.ai",
@@ -73,6 +78,13 @@ export const ja = {
     cancel: "キャンセル",
     newRelease: "別のリリースを作成",
     previewLabel: "生成されたリリース動画のプレビュー",
+    socialVideoLabel: "投稿プレビューに添付されたリリース動画",
+    publisherName: "あなたのアカウント",
+    xAudience: "@yourhandle · たった今",
+    linkedinAudience: "あなたのアカウント · 1次",
+    characters: "文字",
+    xPreviewNote: "Xプレビュー",
+    linkedinPreviewNote: "LinkedInプレビュー",
   },
   errors: {
     requiredFields: "録画、機能名、機能の説明を入力してください。",
