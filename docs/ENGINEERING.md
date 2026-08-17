@@ -70,6 +70,24 @@ A non-trivial Issue normally owns one branch/worktree/PR through completion. Age
 
 Keep the same coding-agent chat for ordinary fixes when the current context remains useful. Prefer a fresh coding-agent chat when prior conversational context is likely to bias work toward a superseded strategy. A fresh agent must be able to recover the task from the active Issue, repository docs, git history, and PR discussion without relying on previous chat memory.
 
+## Agent topology and efficiency
+
+Use the simplest agent topology that can reliably satisfy the active contract. One main coding agent is the default for ordinary tasks; more agents are not a quality goal by themselves.
+
+Delegate only when the extra agent work has a clear purpose, such as:
+
+- independent work that can be parallelized without hidden ordering or shared-state assumptions
+- read-heavy or noisy exploration, test/log analysis, or triage that would otherwise pollute the main task context
+- an independent review where separation from the implementing context materially improves the check
+
+Avoid overlapping parallel writes to the same files, contracts, or tightly coupled implementation areas. If write-heavy parallelism is justified, partition ownership and integration boundaries explicitly rather than relying on agents to coordinate implicitly.
+
+Treat subagents, additional MCPs, skills, orchestration layers, and higher-compute modes as added cost and complexity, not free capability. Add or require them only when they demonstrate meaningful reliability, quality, context-isolation, or wall-clock benefit for a real ReleaseFlow workflow.
+
+Keep fast-moving personal model choices, reasoning defaults, pricing assumptions, and cost-routing preferences out of repository policy unless they become deliberate shared repository requirements. Personal defaults belong in user-level Codex configuration; repository guidance should encode durable behavior and verification expectations.
+
+When materially changing prompts, tools, agent topology, or other harness behavior, compare representative before/after tasks where practical. Prefer accepted outcome, retries, human intervention, wall-clock time, and token/credit usage when observable over intuition alone. Change one major variable at a time when practical, and optimize total cost/time per accepted change rather than raw token count in isolation.
+
 ## Method-sensitive agent contracts
 
 When *how* the work is implemented matters, make that requirement verifiable in the Issue. Include only the fields that are relevant:
